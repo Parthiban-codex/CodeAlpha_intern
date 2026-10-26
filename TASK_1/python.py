@@ -38,6 +38,5 @@ def m():
     finally:
         cursor.close()
         l.close()
-
 if __name__ == "__main__":
     obj.run(debug=True)
