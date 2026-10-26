@@ -23,7 +23,6 @@ def m():
     
     l = reg()
     cursor = l.cursor()
-    
     try:
         sql = "INSERT INTO register(name, email, password) VALUES (%s, %s, %s)"
         cursor.execute(sql, (name, email, password))
