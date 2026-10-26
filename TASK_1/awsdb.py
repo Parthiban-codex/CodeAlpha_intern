@@ -5,7 +5,6 @@ from flask import Flask, render_template, request
 
 load_dotenv()
 app = Flask(__name__)
-
 def create_database():
     db_name = os.getenv("aws-db", "myapp")
     connection = pymysql.connect(
