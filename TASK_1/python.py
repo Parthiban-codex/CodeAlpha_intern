@@ -18,7 +18,7 @@ def t():
 @obj.route("/submit", methods=["POST"])
 def m():
     name = request.form["name"]
-    email = request.form["email"].lower(cle)
+    email = request.form["email"].lower()
     password = request.form["password"]
     
     l = reg()
