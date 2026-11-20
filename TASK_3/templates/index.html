@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AeroTransit — Cloud Bus Pass System</title>
+  <title>AeroTransit — Dynamic Bus Pass Suite</title>
   <style>
     :root {
-      --bg-dark: #060b16;
-      --card-bg: rgba(15, 23, 42, 0.82);
-      --card-border: rgba(148, 163, 184, 0.18);
-      --text-main: #f8fafc;
-      --text-dim: #94a3b8;
+      --bg: #060b16;
+      --panel: rgba(15, 23, 42, 0.84);
+      --border: rgba(148, 163, 184, 0.18);
+      --text: #f8fafc;
+      --muted: #94a3b8;
       --cyan: #22d3ee;
       --indigo: #818cf8;
       --emerald: #34d399;
@@ -26,664 +26,614 @@
     body {
       margin: 0;
       min-height: 100vh;
-      padding: 26px 16px 60px;
-      color: var(--text-main);
+      padding: 24px 16px 60px;
+      color: var(--text);
       background:
-        radial-gradient(circle at 12% 10%, rgba(34, 211, 238, 0.16), transparent 38%),
-        radial-gradient(circle at 88% 15%, rgba(129, 140, 248, 0.20), transparent 42%),
-        radial-gradient(circle at 50% 95%, rgba(52, 211, 153, 0.10), transparent 45%),
-        var(--bg-dark);
+        radial-gradient(circle at 15% 10%, rgba(34, 211, 238, 0.15), transparent 38%),
+        radial-gradient(circle at 85% 15%, rgba(129, 140, 248, 0.18), transparent 42%),
+        var(--bg);
     }
 
-    .app {
-      max-width: 1080px;
+    .wrap {
+      max-width: 1120px;
       margin: 0 auto;
     }
 
-    .banner {
+    .topbar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 20px;
-      padding: 22px 26px;
-      border-radius: 22px;
-      background: linear-gradient(125deg, rgba(15, 23, 42, 0.92), rgba(30, 27, 75, 0.75));
-      border: 1px solid var(--card-border);
-      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
-      margin-bottom: 22px;
+      flex-wrap: wrap;
+      gap: 14px;
+      padding: 18px 22px;
+      border-radius: 18px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      margin-bottom: 18px;
     }
 
-    .live-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 12px;
-      border-radius: 999px;
-      font-size: 11.5px;
-      font-weight: 700;
-      letter-spacing: 0.6px;
-      text-transform: uppercase;
-      color: var(--cyan);
-      background: rgba(34, 211, 238, 0.12);
-      border: 1px solid rgba(34, 211, 238, 0.3);
-    }
-
-    .pulse {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--emerald);
-      box-shadow: 0 0 12px var(--emerald);
-    }
-
-    .banner h1 {
-      margin: 10px 0 6px;
-      font-size: 28px;
+    .title-grad {
+      margin: 0;
+      font-size: 24px;
       font-weight: 800;
       background: linear-gradient(90deg, #ffffff, #67e8f9, #a5b4fc);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
-    .banner p {
-      margin: 0;
-      font-size: 13.5px;
-      color: var(--text-dim);
-      max-width: 600px;
-      line-height: 1.5;
+    .sub {
+      margin: 3px 0 0;
+      font-size: 12.5px;
+      color: var(--muted);
     }
 
-    .pills {
+    .nav {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
-      margin-top: 12px;
+      margin-bottom: 18px;
     }
 
-    .pill {
-      font-size: 11.5px;
-      color: #e2e8f0;
-      padding: 5px 10px;
-      border-radius: 9px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+    .tab {
+      padding: 9px 15px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.7);
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
     }
 
-    .layout {
-      display: grid;
-      grid-template-columns: 1fr 1.1fr;
-      gap: 22px;
-    }
-
-    .stack {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
+    .tab.active {
+      color: #04101a;
+      background: linear-gradient(90deg, var(--cyan), var(--indigo));
+      border-color: transparent;
     }
 
     .panel {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 20px;
-      padding: 22px;
-      backdrop-filter: blur(14px);
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 20px;
+      margin-bottom: 18px;
     }
 
-    .panel h2 {
-      margin: 0 0 4px;
-      font-size: 18px;
-      font-weight: 700;
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
     }
 
-    .panel-sub {
-      margin: 0 0 14px;
-      font-size: 12.5px;
-      color: var(--text-dim);
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .stat {
+      padding: 15px;
+      border-radius: 14px;
+      background: rgba(2, 6, 23, 0.72);
+      border: 1px solid var(--border);
+    }
+
+    .stat small {
+      color: var(--muted);
+      font-size: 11.5px;
+      display: block;
+    }
+
+    .stat strong {
+      font-size: 22px;
+      margin-top: 4px;
+      display: block;
     }
 
     label {
       display: block;
-      margin-top: 12px;
+      margin-top: 11px;
       margin-bottom: 5px;
-      font-size: 12px;
-      font-weight: 600;
+      font-size: 11.5px;
+      font-weight: 700;
       color: #cbd5e1;
       text-transform: uppercase;
-      letter-spacing: 0.4px;
     }
 
-    input,
-    select {
+    input, select {
       width: 100%;
-      padding: 11px 13px;
-      border-radius: 11px;
+      padding: 10px 12px;
+      border-radius: 10px;
       border: 1px solid rgba(148, 163, 184, 0.22);
-      background: rgba(2, 6, 23, 0.82);
-      color: var(--text-main);
-      font-size: 14px;
-    }
-
-    input:focus,
-    select:focus {
-      outline: none;
-      border-color: var(--cyan);
-      box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.16);
-    }
-
-    .two-col {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-
-    .fare-box {
-      margin-top: 16px;
-      padding: 14px 16px;
-      border-radius: 13px;
-      background: linear-gradient(135deg, rgba(34, 211, 238, 0.14), rgba(129, 140, 248, 0.16));
-      border: 1px solid rgba(34, 211, 238, 0.32);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .fare-val {
-      font-size: 22px;
-      font-weight: 800;
-      color: var(--cyan);
+      background: rgba(2, 6, 23, 0.85);
+      color: var(--text);
+      font-size: 13.5px;
     }
 
     .btn {
-      width: 100%;
-      margin-top: 14px;
-      padding: 11.5px 14px;
+      margin-top: 12px;
+      padding: 10px 14px;
       border: none;
-      border-radius: 11px;
-      font-size: 14px;
+      border-radius: 10px;
       font-weight: 700;
+      font-size: 13.5px;
       cursor: pointer;
-      transition: transform 0.15s ease, filter 0.15s ease;
     }
 
     .btn-primary {
-      color: #03111c;
       background: linear-gradient(90deg, var(--cyan), var(--indigo));
+      color: #04101a;
+      width: 100%;
     }
 
-    .btn-renew {
-      color: #130d02;
+    .btn-amber {
       background: linear-gradient(90deg, var(--amber), #fb923c);
+      color: #160e02;
+      width: 100%;
     }
 
-    .btn-ghost {
-      background: rgba(30, 41, 59, 0.9);
-      color: #f1f5f9;
-      border: 1px solid rgba(148, 163, 184, 0.25);
-    }
-
-    .btn:hover {
-      filter: brightness(1.08);
-      transform: translateY(-1px);
-    }
-
-    .note {
-      margin-top: 9px;
-      font-size: 12.5px;
-      color: #67e8f9;
-      min-height: 17px;
-    }
-
-    .note.err {
+    .btn-rose {
+      background: rgba(251, 113, 133, 0.18);
       color: #fda4af;
+      border: 1px solid rgba(251, 113, 133, 0.45);
+      width: 100%;
     }
 
-    .smart-pass {
-      margin-top: 14px;
-      border-radius: 16px;
-      padding: 18px;
-      background: linear-gradient(135deg, #091326 0%, #1e1b4b 55%, #083344 100%);
-      border: 1px solid rgba(34, 211, 238, 0.38);
+    .btn-sm {
+      padding: 6px 10px;
+      font-size: 12px;
+      width: auto;
+      margin-top: 0;
     }
 
-    .pass-header {
+    .msg {
+      margin-top: 8px;
+      font-size: 12.5px;
+      color: var(--cyan);
+      min-height: 16px;
+    }
+
+    .msg.err {
+      color: var(--rose);
+    }
+
+    .pass-card {
+      padding: 14px;
+      border-radius: 12px;
+      background: rgba(2, 6, 23, 0.72);
+      border: 1px solid var(--border);
+      margin-top: 10px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding-bottom: 10px;
-      margin-bottom: 12px;
-      border-bottom: 1px dashed rgba(226, 232, 240, 0.22);
-    }
-
-    .pass-code {
-      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-      font-size: 16px;
-      font-weight: 800;
-      color: var(--cyan);
+      flex-wrap: wrap;
+      gap: 10px;
     }
 
     .badge {
-      padding: 4px 10px;
+      padding: 3px 9px;
       border-radius: 999px;
       font-size: 11px;
       font-weight: 800;
       background: rgba(52, 211, 153, 0.18);
       color: #6ee7b7;
-      border: 1px solid rgba(52, 211, 153, 0.4);
     }
 
-    .badge.alert {
+    .badge.EXPIRED, .badge.CANCELLED, .badge.TAMPERED {
       background: rgba(251, 113, 133, 0.2);
       color: #fda4af;
-      border-color: rgba(251, 113, 133, 0.45);
     }
 
-    .pass-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
+    .hidden {
+      display: none;
     }
 
-    .pass-item small {
-      display: block;
-      font-size: 11px;
-      color: var(--text-dim);
-    }
-
-    .pass-item strong {
-      font-size: 13.5px;
-      color: #f8fafc;
-    }
-
-    .sig-box {
-      margin-top: 12px;
-      padding-top: 9px;
-      border-top: 1px solid rgba(255, 255, 255, 0.12);
-      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-      font-size: 11px;
-      color: #cbd5e1;
-      word-break: break-all;
-    }
-
-    .recent-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 12px;
-      margin-top: 8px;
-      border-radius: 11px;
-      background: rgba(2, 6, 23, 0.65);
-      border: 1px solid rgba(148, 163, 184, 0.15);
-      font-size: 12.5px;
-      cursor: pointer;
-    }
-
-    .recent-item:hover {
-      border-color: var(--cyan);
-    }
-
-    @media (max-width: 860px) {
-      .banner, .layout, .two-col {
-        grid-template-columns: 1fr;
-        flex-direction: column;
-        align-items: stretch;
+    @media (max-width: 820px) {
+      .grid-2, .stats {
+        grid-template-columns: 1fr 1fr;
       }
-      .bus-svg { display: none; }
+    }
+
+    @media (max-width: 540px) {
+      .grid-2, .stats {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="app">
-    <header class="banner">
+  <div class="wrap">
+    <header class="topbar">
       <div>
-        <div class="live-tag"><span class="pulse"></span> Aiven MySQL • Anti-Duplicate • Renew • Profile</div>
-        <h1>Smart Cloud Bus Pass System</h1>
-        <p>
-          One active pass per email, instant pass renewal, commuter profile editing, and HMAC signature verification.
-        </p>
-        <div class="pills">
-          <span class="pill">No Duplicate Email Pass</span>
-          <span class="pill">Renew Pass Validity</span>
-          <span class="pill">Edit Commuter Profile</span>
-          <span class="pill">Aiven MySQL + Render</span>
+        <h1 class="title-grad">AeroTransit Cloud Pass Suite</h1>
+        <p class="sub" id="sessionInfo">Login or create an account with a unique email</p>
+      </div>
+      <button class="btn btn-rose btn-sm hidden" id="logoutBtn" onclick="logout()">Logout</button>
+    </header>
+
+    <!-- Auth View -->
+    <section id="authSection" class="grid-2">
+      <div class="panel">
+        <h2>Login</h2>
+        <p class="sub">Sign in with your separate Login ID &amp; Password.</p>
+        <form id="loginForm">
+          <label>Login ID</label>
+          <input type="text" id="loginIdInput" required placeholder="e.g. karthik01" />
+          <label>Password</label>
+          <input type="password" id="loginPassInput" required placeholder="Password" />
+          <button type="submit" class="btn btn-primary">Login</button>
+          <div class="msg" id="loginMsg"></div>
+        </form>
+      </div>
+
+      <div class="panel">
+        <h2>Create Account (Unique Email)</h2>
+        <p class="sub">Each person gets a separate Login ID; duplicate emails are blocked.</p>
+        <form id="regForm">
+          <label>Login ID</label>
+          <input type="text" id="regLoginId" required placeholder="e.g. karthik01" />
+          <label>Full Name</label>
+          <input type="text" id="regName" required placeholder="e.g. Karthik R" />
+          <label>Email (Must be Unique)</label>
+          <input type="email" id="regEmail" required placeholder="e.g. karthik@mail.com" />
+          <label>Password</label>
+          <input type="password" id="regPass" required placeholder="Min 4 characters" />
+          <button type="submit" class="btn btn-primary">Register &amp; Enter</button>
+          <div class="msg" id="regMsg"></div>
+        </form>
+      </div>
+    </section>
+
+    <!-- Main App View -->
+    <section id="appSection" class="hidden">
+      <nav class="nav">
+        <button class="tab active" data-tab="dashTab" onclick="switchTab('dashTab', this)">Dashboard</button>
+        <button class="tab" data-tab="passTab" onclick="switchTab('passTab', this)">Book / Renew / Cancel</button>
+        <button class="tab" data-tab="expiryTab" onclick="switchTab('expiryTab', this)">Expiry &amp; Status</button>
+        <button class="tab" data-tab="routesTab" onclick="switchTab('routesTab', this)">Routes &amp; Bus Status</button>
+        <button class="tab" data-tab="profileTab" onclick="switchTab('profileTab', this)">Edit Profile</button>
+      </nav>
+
+      <!-- 1. Dashboard -->
+      <div id="dashTab" class="tab-view">
+        <div class="stats">
+          <div class="stat"><small>Active Passes</small><strong id="cActive">0</strong></div>
+          <div class="stat"><small>Expired Passes</small><strong id="cExpired">0</strong></div>
+          <div class="stat"><small>Cancelled Passes</small><strong id="cCancelled">0</strong></div>
+          <div class="stat"><small>Total Passes</small><strong id="cTotal">0</strong></div>
+        </div>
+        <div class="panel">
+          <h2>Your Passes Overview</h2>
+          <p class="sub">Live status &amp; HMAC signature check from Aiven MySQL.</p>
+          <div id="dashList"></div>
         </div>
       </div>
 
-      <svg class="bus-svg" width="175" height="100" viewBox="0 0 175 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="10" y="12" width="155" height="62" rx="15" fill="url(#bg1)" stroke="#67E8F9" stroke-opacity="0.6" stroke-width="1.5"/>
-        <rect x="22" y="22" width="26" height="18" rx="4" fill="#062238"/>
-        <rect x="55" y="22" width="26" height="18" rx="4" fill="#062238"/>
-        <rect x="88" y="22" width="26" height="18" rx="4" fill="#062238"/>
-        <rect x="121" y="22" width="30" height="30" rx="4" fill="#062238"/>
-        <rect x="22" y="49" width="90" height="6" rx="3" fill="#CFFAFE" fill-opacity="0.45"/>
-        <circle cx="45" cy="76" r="11" fill="#090D16" stroke="#22D3EE" stroke-width="2.5"/>
-        <circle cx="45" cy="76" r="4" fill="#67E8F9"/>
-        <circle cx="130" cy="76" r="11" fill="#090D16" stroke="#22D3EE" stroke-width="2.5"/>
-        <circle cx="130" cy="76" r="4" fill="#67E8F9"/>
-        <defs>
-          <linearGradient id="bg1" x1="10" y1="12" x2="165" y2="74" gradientUnits="userSpaceOnUse">
-            <stop stop-color="#0891B2"/>
-            <stop offset="1" stop-color="#4F46E5"/>
-          </linearGradient>
-        </defs>
-      </svg>
-    </header>
-
-    <main class="layout">
-      <!-- Left Column: Book New Pass + Renew Pass -->
-      <div class="stack">
-        <section class="panel">
-          <h2>1. Book New Bus Pass</h2>
-          <p class="panel-sub">Duplicate active passes with the same email are blocked automatically.</p>
-
+      <!-- 2. Book / Renew / Cancel -->
+      <div id="passTab" class="tab-view hidden grid-2">
+        <div class="panel">
+          <h2>Book New Pass</h2>
           <form id="bookForm">
-            <label for="name">Passenger Name</label>
-            <input type="text" id="name" required placeholder="e.g. Karthik R" />
-
-            <label for="email">Email Address</label>
-            <input type="email" id="email" required placeholder="e.g. karthik@mail.com" />
-
-            <label for="route">Transit Route</label>
-            <select id="route">
-              <option value="City Express (Zone 1)" data-rate="25">City Express (Zone 1) — ₹25 / day</option>
-              <option value="Metro Link (Zone 2)" data-rate="40">Metro Link (Zone 2) — ₹40 / day</option>
-              <option value="Intercity Rapid (All Zones)" data-rate="75">Intercity Rapid (All Zones) — ₹75 / day</option>
+            <label>Route</label>
+            <select id="bookRoute">
+              <option value="City Express (Zone 1)">City Express (Zone 1) — ₹25/d</option>
+              <option value="Metro Link (Zone 2)">Metro Link (Zone 2) — ₹40/d</option>
+              <option value="Intercity Rapid (All Zones)">Intercity Rapid (All Zones) — ₹75/d</option>
             </select>
-
-            <label for="days">Validity Plan</label>
-            <select id="days">
-              <option value="1" data-mult="1">1 Day Pass (1x)</option>
-              <option value="7" data-mult="6">7 Days Pass (6x)</option>
-              <option value="30" data-mult="20">30 Days Monthly (20x)</option>
+            <label>Duration</label>
+            <select id="bookDays">
+              <option value="1">1 Day (1x)</option>
+              <option value="7">7 Days (6x)</option>
+              <option value="30">30 Days (20x)</option>
             </select>
-
-            <div class="fare-box">
-              <div>
-                <small style="color:var(--text-dim);display:block;">Calculated Fare</small>
-                <strong id="planSummary">City Express • 1 Day</strong>
-              </div>
-              <div class="fare-val" id="fareDisplay">₹25</div>
-            </div>
-
-            <button type="submit" class="btn btn-primary">Issue Bus Pass</button>
-            <div class="note" id="bookStatus"></div>
+            <button type="submit" class="btn btn-primary">Issue Pass</button>
+            <div class="msg" id="bookMsg"></div>
           </form>
-        </section>
+        </div>
 
-        <section class="panel">
-          <h2>2. Renew Existing Bus Pass</h2>
-          <p class="panel-sub">Extend validity from current expiry (or today if expired) and refresh signature.</p>
-
+        <div class="panel">
+          <h2>Renew or Cancel Pass</h2>
           <form id="renewForm">
-            <label for="renewPassId">Pass ID</label>
-            <input type="text" id="renewPassId" required placeholder="e.g. BP-A1B2C3D4" />
-
-            <div class="two-col">
-              <div>
-                <label for="renewDays">Add Validity</label>
-                <select id="renewDays">
-                  <option value="1" data-mult="1">+1 Day (1x)</option>
-                  <option value="7" data-mult="6" selected>+7 Days (6x)</option>
-                  <option value="30" data-mult="20">+30 Days (20x)</option>
-                </select>
-              </div>
-              <div>
-                <label for="renewRoute">Route (Optional Change)</label>
-                <select id="renewRoute">
-                  <option value="">Keep Current Route</option>
-                  <option value="City Express (Zone 1)">City Express (Zone 1)</option>
-                  <option value="Metro Link (Zone 2)">Metro Link (Zone 2)</option>
-                  <option value="Intercity Rapid (All Zones)">Intercity Rapid (All Zones)</option>
-                </select>
-              </div>
-            </div>
-
-            <button type="submit" class="btn btn-renew">Renew Bus Pass</button>
-            <div class="note" id="renewStatus"></div>
+            <label>Pass ID</label>
+            <input type="text" id="actionPassId" required placeholder="BP-XXXXXXXX" />
+            <label>Renew Extra Days</label>
+            <select id="renewDays">
+              <option value="1">+1 Day (1x)</option>
+              <option value="7" selected>+7 Days (6x)</option>
+              <option value="30">+30 Days (20x)</option>
+            </select>
+            <button type="submit" class="btn btn-amber">Renew Pass</button>
+            <button type="button" class="btn btn-rose" onclick="cancelSelectedPass()">Cancel Pass</button>
+            <div class="msg" id="actionMsg"></div>
           </form>
-        </section>
+        </div>
       </div>
 
-      <!-- Right Column: Verify Pass + Edit Profile + Pass Card -->
-      <div class="stack">
-        <section class="panel">
-          <h2>3. Verify Pass &amp; Smart Card</h2>
-          <p class="panel-sub">Check pass validity, anti-theft HMAC signature, and inspect pass details.</p>
-
-          <label for="verifyInput">Pass ID</label>
-          <input type="text" id="verifyInput" placeholder="e.g. BP-A1B2C3D4" />
-          <button type="button" class="btn btn-ghost" id="verifyBtn">Verify Pass</button>
-          <div class="note" id="verifyStatus"></div>
-
-          <div class="smart-pass">
-            <div class="pass-header">
-              <span class="pass-code" id="cardId">BP-PREVIEW</span>
-              <span class="badge" id="cardStatus">ACTIVE</span>
-            </div>
-            <div class="pass-grid">
-              <div class="pass-item">
-                <small>Passenger</small>
-                <strong id="cardName">Commuter Preview</strong>
-              </div>
-              <div class="pass-item">
-                <small>Email</small>
-                <strong id="cardEmail">-</strong>
-              </div>
-              <div class="pass-item">
-                <small>Route</small>
-                <strong id="cardRoute">City Express (Zone 1)</strong>
-              </div>
-              <div class="pass-item">
-                <small>Total Fare &amp; Days</small>
-                <strong id="cardFare">₹25 (1d)</strong>
-              </div>
-              <div class="pass-item" style="grid-column: span 2;">
-                <small>Valid Until</small>
-                <strong id="cardValid">Issue or verify a pass</strong>
-              </div>
-            </div>
-            <div class="sig-box" id="cardSig">HMAC Signature: AWAITING_PASS</div>
-          </div>
-        </section>
-
-        <section class="panel">
-          <h2>4. Edit Passenger Profile</h2>
-          <p class="panel-sub">Update commuter name or email; anti-theft signature is automatically re-signed.</p>
-
-          <form id="profileForm">
-            <label for="editPassId">Pass ID</label>
-            <input type="text" id="editPassId" required placeholder="e.g. BP-A1B2C3D4" />
-
-            <div class="two-col">
-              <div>
-                <label for="editName">New Passenger Name</label>
-                <input type="text" id="editName" required placeholder="Updated name" />
-              </div>
-              <div>
-                <label for="editEmail">New Email</label>
-                <input type="email" id="editEmail" required placeholder="updated@mail.com" />
-              </div>
-            </div>
-
-            <button type="submit" class="btn btn-primary">Save Profile Changes</button>
-            <div class="note" id="profileStatus"></div>
-          </form>
-
-          <div style="margin-top: 16px;">
-            <label>Recent Passes (Click to Load &amp; Verify)</label>
-            <div id="recentBox"></div>
-          </div>
-        </section>
+      <!-- 3. Expiry & Status -->
+      <div id="expiryTab" class="tab-view hidden panel">
+        <h2>Expiry &amp; Pass Status Tracker</h2>
+        <label style="max-width:240px;">Filter Status</label>
+        <select id="statusFilter" style="max-width:240px;" onchange="renderExpiryList()">
+          <option value="ALL">All Statuses</option>
+          <option value="ACTIVE">ACTIVE</option>
+          <option value="EXPIRED">EXPIRED</option>
+          <option value="CANCELLED">CANCELLED</option>
+        </select>
+        <div id="expiryList"></div>
       </div>
-    </main>
+
+      <!-- 4. Routes & Bus Status -->
+      <div id="routesTab" class="tab-view hidden panel">
+        <h2>Routes &amp; Live Bus Status</h2>
+        <p class="sub">Timings, stops, fares, and live vehicle status.</p>
+        <div id="routesList"></div>
+      </div>
+
+      <!-- 5. Edit Profile -->
+      <div id="profileTab" class="tab-view hidden panel" style="max-width:560px;">
+        <h2>Edit Profile</h2>
+        <p class="sub">Email must remain unique across all users. Updating refreshes pass signatures.</p>
+        <form id="profileForm">
+          <label>Full Name</label>
+          <input type="text" id="profName" required />
+          <label>Email (Unique)</label>
+          <input type="email" id="profEmail" required />
+          <label>New Password (Optional)</label>
+          <input type="password" id="profPass" placeholder="Leave blank to keep current password" />
+          <button type="submit" class="btn btn-primary">Save Profile</button>
+          <div class="msg" id="profMsg"></div>
+        </form>
+      </div>
+    </section>
   </div>
 
   <script>
-    const routeEl = document.getElementById("route");
-    const daysEl = document.getElementById("days");
-    const fareDisplay = document.getElementById("fareDisplay");
-    const planSummary = document.getElementById("planSummary");
+    let TOKEN = localStorage.getItem("pass_token") || "";
+    let USER_PASSES = [];
 
-    function refreshFare() {
-      const rate = Number(routeEl.selectedOptions[0].dataset.rate || 0);
-      const mult = Number(daysEl.selectedOptions[0].dataset.mult || 1);
-      const dVal = daysEl.value;
-      const shortRoute = routeEl.value.split(" (")[0];
-      fareDisplay.textContent = "₹" + (rate * mult);
-      planSummary.textContent = `${shortRoute} • ${dVal} ${dVal === "1" ? "Day" : "Days"}`;
-    }
-    routeEl.addEventListener("change", refreshFare);
-    daysEl.addEventListener("change", refreshFare);
-    refreshFare();
-
-    function syncPassIds(passId) {
-      document.getElementById("verifyInput").value = passId;
-      document.getElementById("renewPassId").value = passId;
-      document.getElementById("editPassId").value = passId;
+    function authHeaders() {
+      return {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + TOKEN
+      };
     }
 
-    function renderPass(p) {
-      const state = p.effective_status || p.status || "ACTIVE";
-      const badge = document.getElementById("cardStatus");
-      badge.textContent = state;
-      badge.className = "badge" + (state !== "ACTIVE" ? " alert" : "");
-
-      document.getElementById("cardId").textContent = p.pass_id;
-      document.getElementById("cardName").textContent = p.passenger_name;
-      document.getElementById("cardEmail").textContent = p.email || "-";
-      document.getElementById("cardRoute").textContent = p.route;
-      document.getElementById("cardFare").textContent = `₹${p.fare} (${p.days}d)`;
-      document.getElementById("cardValid").textContent = new Date(p.valid_until).toLocaleString();
-      document.getElementById("cardSig").textContent = `HMAC Signature: ${p.signature}`;
-
-      document.getElementById("editName").value = p.passenger_name || "";
-      document.getElementById("editEmail").value = p.email || "";
-      syncPassIds(p.pass_id);
+    function switchTab(tabId, btn) {
+      document.querySelectorAll(".tab-view").forEach(el => el.classList.add("hidden"));
+      document.querySelectorAll(".tab").forEach(el => el.classList.remove("active"));
+      document.getElementById(tabId).classList.remove("hidden");
+      if (btn) btn.classList.add("active");
+      if (tabId === "routesTab") loadRoutes();
     }
 
-    async function loadRecent() {
-      try {
-        const res = await fetch("/api/passes");
-        const data = await res.json();
-        const box = document.getElementById("recentBox");
-        if (!data.passes || !data.passes.length) {
-          box.innerHTML = `<div class="note">No passes issued yet.</div>`;
-          return;
-        }
-        box.innerHTML = data.passes.map(item => `
-          <div class="recent-item" onclick="verifyById('${item.pass_id}')">
-            <div><strong>${item.pass_id}</strong> · ${item.passenger_name} (${item.email})</div>
-            <div style="color:#67e8f9;font-weight:700;">₹${item.fare}</div>
+    function setAuthedUI(user) {
+      document.getElementById("authSection").classList.add("hidden");
+      document.getElementById("appSection").classList.remove("hidden");
+      document.getElementById("logoutBtn").classList.remove("hidden");
+      document.getElementById("sessionInfo").textContent =
+        `Logged in as ${user.full_name} (@${user.login_id}) · ${user.email}`;
+      document.getElementById("profName").value = user.full_name;
+      document.getElementById("profEmail").value = user.email;
+    }
+
+    function logout() {
+      TOKEN = "";
+      localStorage.removeItem("pass_token");
+      document.getElementById("appSection").classList.add("hidden");
+      document.getElementById("logoutBtn").classList.add("hidden");
+      document.getElementById("authSection").classList.remove("hidden");
+      document.getElementById("sessionInfo").textContent = "Login or create an account with a unique email";
+    }
+
+    function passCardHTML(p) {
+      const st = p.effective_status || p.status;
+      return `
+        <div class="pass-card">
+          <div>
+            <strong>${p.pass_id}</strong> · ${p.route}
+            <div class="sub">Fare: ₹${p.fare} (${p.days}d) · Valid Until: ${new Date(p.valid_until).toLocaleString()}</div>
+            <div class="sub">HMAC: ${p.signature} (Verified: ${p.sig_verified ? "YES" : "NO"})</div>
           </div>
-        `).join("");
-      } catch (_) {}
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="badge ${st}">${st}</span>
+            <button class="btn btn-sm" onclick="selectPass('${p.pass_id}')">Select</button>
+          </div>
+        </div>
+      `;
     }
 
-    async function verifyById(passId) {
-      const st = document.getElementById("verifyStatus");
-      st.className = "note";
-      st.textContent = "Verifying pass...";
-      const res = await fetch("/api/passes/" + encodeURIComponent(passId));
+    function selectPass(passId) {
+      document.getElementById("actionPassId").value = passId;
+      switchTab("passTab", document.querySelector('[data-tab="passTab"]'));
+    }
+
+    function renderExpiryList() {
+      const filter = document.getElementById("statusFilter").value;
+      const items = filter === "ALL"
+        ? USER_PASSES
+        : USER_PASSES.filter(p => (p.effective_status || p.status) === filter);
+      document.getElementById("expiryList").innerHTML = items.length
+        ? items.map(passCardHTML).join("")
+        : `<p class="sub" style="margin-top:12px;">No passes in ${filter} state.</p>`;
+    }
+
+    async function loadDashboard() {
+      if (!TOKEN) return;
+      const res = await fetch("/api/dashboard", { headers: { "Authorization": "Bearer " + TOKEN } });
       const data = await res.json();
       if (!res.ok) {
-        st.className = "note err";
-        st.textContent = data.error || "Pass not found";
+        logout();
         return;
       }
-      renderPass(data.pass);
-      st.textContent = `Status: ${data.pass.effective_status} | Signature Valid: ${data.pass.sig_verified ? "YES" : "NO"}`;
+      setAuthedUI(data.user);
+      USER_PASSES = data.passes || [];
+      document.getElementById("cActive").textContent = data.counts.ACTIVE || 0;
+      document.getElementById("cExpired").textContent = data.counts.EXPIRED || 0;
+      document.getElementById("cCancelled").textContent = data.counts.CANCELLED || 0;
+      document.getElementById("cTotal").textContent = data.total_passes || 0;
+
+      document.getElementById("dashList").innerHTML = USER_PASSES.length
+        ? USER_PASSES.map(passCardHTML).join("")
+        : `<p class="sub">No passes yet. Go to "Book / Renew / Cancel" to issue one.</p>`;
+      renderExpiryList();
     }
 
-    // 1. Book New Pass (Blocks duplicate email)
+    async function loadRoutes() {
+      const res = await fetch("/api/routes");
+      const data = await res.json();
+      document.getElementById("routesList").innerHTML = (data.routes || []).map(r => `
+        <div class="pass-card">
+          <div>
+            <strong>${r.route_name}</strong> · Bus: <strong>${r.bus_no}</strong>
+            <div class="sub">Stops: ${r.stops}</div>
+            <div class="sub">Base Rate: ₹${r.rate}/day · Frequency: ${r.frequency}</div>
+          </div>
+          <span class="badge">${r.bus_status}</span>
+        </div>
+      `).join("");
+    }
+
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const msg = document.getElementById("loginMsg");
+      msg.className = "msg";
+      msg.textContent = "Logging in...";
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          loginId: document.getElementById("loginIdInput").value,
+          password: document.getElementById("loginPassInput").value
+        })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        msg.className = "msg err";
+        msg.textContent = data.error;
+        return;
+      }
+      TOKEN = data.token;
+      localStorage.setItem("pass_token", TOKEN);
+      await loadDashboard();
+    });
+
+    document.getElementById("regForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const msg = document.getElementById("regMsg");
+      msg.className = "msg";
+      msg.textContent = "Creating account...";
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          loginId: document.getElementById("regLoginId").value,
+          fullName: document.getElementById("regName").value,
+          email: document.getElementById("regEmail").value,
+          password: document.getElementById("regPass").value
+        })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        msg.className = "msg err";
+        msg.textContent = data.error;
+        return;
+      }
+      TOKEN = data.token;
+      localStorage.setItem("pass_token", TOKEN);
+      await loadDashboard();
+    });
+
     document.getElementById("bookForm").addEventListener("submit", async (e) => {
       e.preventDefault();
-      const st = document.getElementById("bookStatus");
-      st.className = "note";
-      st.textContent = "Checking duplicate email & saving pass...";
-
+      const msg = document.getElementById("bookMsg");
+      msg.className = "msg";
+      msg.textContent = "Issuing pass...";
       const res = await fetch("/api/passes", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: authHeaders(),
         body: JSON.stringify({
-          passengerName: document.getElementById("name").value,
-          email: document.getElementById("email").value,
-          route: routeEl.value,
-          days: daysEl.value
+          route: document.getElementById("bookRoute").value,
+          days: document.getElementById("bookDays").value
         })
       });
       const data = await res.json();
       if (!res.ok) {
-        st.className = "note err";
-        st.textContent = data.error || "Could not create pass";
-        if (data.existing_pass) renderPass(data.existing_pass);
+        msg.className = "msg err";
+        msg.textContent = data.error;
         return;
       }
-      renderPass(data.pass);
-      st.textContent = `Issued ${data.pass.pass_id} successfully!`;
-      loadRecent();
+      msg.textContent = `Issued ${data.pass.pass_id}!`;
+      await loadDashboard();
     });
 
-    // 2. Renew Pass
     document.getElementById("renewForm").addEventListener("submit", async (e) => {
       e.preventDefault();
-      const passId = document.getElementById("renewPassId").value.trim().toUpperCase();
-      const st = document.getElementById("renewStatus");
-      st.className = "note";
-      st.textContent = "Renewing bus pass...";
-
-      const res = await fetch(`/api/passes/${encodeURIComponent(passId)}/renew`, {
+      const pid = document.getElementById("actionPassId").value.trim().toUpperCase();
+      const msg = document.getElementById("actionMsg");
+      msg.className = "msg";
+      msg.textContent = "Renewing...";
+      const res = await fetch(`/api/passes/${encodeURIComponent(pid)}/renew`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          days: document.getElementById("renewDays").value,
-          route: document.getElementById("renewRoute").value
-        })
+        headers: authHeaders(),
+        body: JSON.stringify({ days: document.getElementById("renewDays").value })
       });
       const data = await res.json();
       if (!res.ok) {
-        st.className = "note err";
-        st.textContent = data.error || "Renewal failed";
+        msg.className = "msg err";
+        msg.textContent = data.error;
         return;
       }
-      renderPass(data.pass);
-      st.textContent = data.message;
-      loadRecent();
+      msg.textContent = data.message;
+      await loadDashboard();
     });
 
-    // 3. Verify Button
-    document.getElementById("verifyBtn").addEventListener("click", () => {
-      const id = document.getElementById("verifyInput").value.trim();
-      if (id) verifyById(id);
-    });
+    async function cancelSelectedPass() {
+      const pid = document.getElementById("actionPassId").value.trim().toUpperCase();
+      const msg = document.getElementById("actionMsg");
+      msg.className = "msg";
+      if (!pid) return;
+      msg.textContent = "Cancelling pass...";
+      const res = await fetch(`/api/passes/${encodeURIComponent(pid)}/cancel`, {
+        method: "POST",
+        headers: authHeaders()
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        msg.className = "msg err";
+        msg.textContent = data.error;
+        return;
+      }
+      msg.textContent = data.message;
+      await loadDashboard();
+    }
 
-    // 4. Edit Profile
     document.getElementById("profileForm").addEventListener("submit", async (e) => {
       e.preventDefault();
-      const passId = document.getElementById("editPassId").value.trim().toUpperCase();
-      const st = document.getElementById("profileStatus");
-      st.className = "note";
-      st.textContent = "Updating profile...";
-
-      const res = await fetch(`/api/passes/${encodeURIComponent(passId)}/profile`, {
+      const msg = document.getElementById("profMsg");
+      msg.className = "msg";
+      msg.textContent = "Saving profile...";
+      const res = await fetch("/api/profile", {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: authHeaders(),
         body: JSON.stringify({
-          passengerName: document.getElementById("editName").value,
-          email: document.getElementById("editEmail").value
+          fullName: document.getElementById("profName").value,
+          email: document.getElementById("profEmail").value,
+          password: document.getElementById("profPass").value
         })
       });
       const data = await res.json();
       if (!res.ok) {
-        st.className = "note err";
-        st.textContent = data.error || "Profile update failed";
+        msg.className = "msg err";
+        msg.textContent = data.error;
         return;
       }
-      renderPass(data.pass);
-      st.textContent = data.message;
-      loadRecent();
+      document.getElementById("profPass").value = "";
+      msg.textContent = data.message;
+      await loadDashboard();
     });
 
-    loadRecent();
+    if (TOKEN) loadDashboard();
   </script>
 </body>
 </html>
