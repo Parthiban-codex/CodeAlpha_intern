@@ -23,7 +23,6 @@ DB_NAME = os.getenv("DB_NAME", "defaultdb")
 DB_SSL = os.getenv("DB_SSL", "true").lower() == "true"
 PASS_SECRET = os.getenv("PASS_SECRET", "bus-pass-secret-key").encode("utf-8")
 
-# In-memory token store for simple stateless/token sessions across serverless invocations
 TOKENS = {}
 
 ROUTE_CATALOG = [
@@ -71,6 +70,7 @@ def get_connection():
         "database": DB_NAME,
         "cursorclass": DictCursor,
         "autocommit": True,
+        "connect_timeout": 8,
     }
     if DB_SSL:
         args["ssl"] = {"ssl_disabled": False}
@@ -96,7 +96,7 @@ def init_db():
                 """
                 CREATE TABLE IF NOT EXISTS passes (
                     pass_id VARCHAR(32) PRIMARY KEY,
-                    login_id VARCHAR(40) NOT NULL,
+                    login_id VARCHAR(40) NOT NULL DEFAULT '',
                     signature VARCHAR(64) NOT NULL,
                     passenger_name VARCHAR(120) NOT NULL,
                     email VARCHAR(120) NOT NULL,
@@ -109,6 +109,9 @@ def init_db():
                 )
                 """
             )
+            cur.execute("SHOW COLUMNS FROM passes LIKE 'login_id'")
+            if not cur.fetchone():
+                cur.execute("ALTER TABLE passes ADD COLUMN login_id VARCHAR(40) NOT NULL DEFAULT ''")
     finally:
         conn.close()
 
@@ -123,7 +126,12 @@ def ensure_db():
 
 def hash_password(password: str, salt: str = None) -> str:
     salt = salt or secrets.token_hex(8)
-    digest = hashlib.pbkdf2_hmac("sha256", password.encode("utf-8"), salt.encode("utf-8"), 100_000).hexdigest()
+    digest = hashlib.pbkdf2_hmac(
+        "sha256",
+        password.encode("utf-8"),
+        salt.encode("utf-8"),
+        25_000,
+    ).hex()
     return f"{salt}${digest}"
 
 
@@ -314,7 +322,6 @@ def update_profile():
                     (new_name, new_email, login_id),
                 )
 
-            # Re-sign user's passes with updated name/email
             cur.execute("SELECT * FROM passes WHERE login_id = %s", (login_id,))
             user_passes = cur.fetchall()
             for p in user_passes:
