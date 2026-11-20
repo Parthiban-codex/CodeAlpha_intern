@@ -252,14 +252,13 @@
       <button class="btn btn-rose btn-sm hidden" id="logoutBtn" onclick="logout()">Logout</button>
     </header>
 
-    <!-- Auth View -->
     <section id="authSection" class="grid-2">
       <div class="panel">
         <h2>Login</h2>
         <p class="sub">Sign in with your separate Login ID &amp; Password.</p>
         <form id="loginForm">
           <label>Login ID</label>
-          <input type="text" id="loginIdInput" required placeholder="e.g. karthik01" />
+          <input type="text" id="loginIdInput" required placeholder="e.g. user01" />
           <label>Password</label>
           <input type="password" id="loginPassInput" required placeholder="Password" />
           <button type="submit" class="btn btn-primary">Login</button>
@@ -272,11 +271,11 @@
         <p class="sub">Each person gets a separate Login ID; duplicate emails are blocked.</p>
         <form id="regForm">
           <label>Login ID</label>
-          <input type="text" id="regLoginId" required placeholder="e.g. karthik01" />
+          <input type="text" id="regLoginId" required placeholder="e.g. user01" />
           <label>Full Name</label>
-          <input type="text" id="regName" required placeholder="e.g. Karthik R" />
+          <input type="text" id="regName" required placeholder="Full Name" />
           <label>Email (Must be Unique)</label>
-          <input type="email" id="regEmail" required placeholder="e.g. karthik@mail.com" />
+          <input type="email" id="regEmail" required placeholder="name@mail.com" />
           <label>Password</label>
           <input type="password" id="regPass" required placeholder="Min 4 characters" />
           <button type="submit" class="btn btn-primary">Register &amp; Enter</button>
@@ -285,7 +284,6 @@
       </div>
     </section>
 
-    <!-- Main App View -->
     <section id="appSection" class="hidden">
       <nav class="nav">
         <button class="tab active" data-tab="dashTab" onclick="switchTab('dashTab', this)">Dashboard</button>
@@ -295,7 +293,6 @@
         <button class="tab" data-tab="profileTab" onclick="switchTab('profileTab', this)">Edit Profile</button>
       </nav>
 
-      <!-- 1. Dashboard -->
       <div id="dashTab" class="tab-view">
         <div class="stats">
           <div class="stat"><small>Active Passes</small><strong id="cActive">0</strong></div>
@@ -310,7 +307,6 @@
         </div>
       </div>
 
-      <!-- 2. Book / Renew / Cancel -->
       <div id="passTab" class="tab-view hidden grid-2">
         <div class="panel">
           <h2>Book New Pass</h2>
@@ -350,7 +346,6 @@
         </div>
       </div>
 
-      <!-- 3. Expiry & Status -->
       <div id="expiryTab" class="tab-view hidden panel">
         <h2>Expiry &amp; Pass Status Tracker</h2>
         <label style="max-width:240px;">Filter Status</label>
@@ -363,14 +358,12 @@
         <div id="expiryList"></div>
       </div>
 
-      <!-- 4. Routes & Bus Status -->
       <div id="routesTab" class="tab-view hidden panel">
         <h2>Routes &amp; Live Bus Status</h2>
         <p class="sub">Timings, stops, fares, and live vehicle status.</p>
         <div id="routesList"></div>
       </div>
 
-      <!-- 5. Edit Profile -->
       <div id="profileTab" class="tab-view hidden panel" style="max-width:560px;">
         <h2>Edit Profile</h2>
         <p class="sub">Email must remain unique across all users. Updating refreshes pass signatures.</p>
